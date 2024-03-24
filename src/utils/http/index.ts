@@ -1,15 +1,14 @@
 import { createAlova } from 'alova';
 import AdapterUniapp from '@alova/adapter-uniapp';
-import { getBaseUrl, isUseMock } from '@/utils/env';
+import { getBaseURL, isUseMock } from '@/utils/env';
 import { mockAdapter } from '@/mock';
 import { assign } from 'lodash-es';
 import { useAuthStore } from '@/state/modules/auth';
 import { checkStatus } from '@/utils/http/checkStatus';
 import { ContentTypeEnum, ResultEnum } from '@/enums/httpEnum';
 import { Toast } from '@/utils/uniapi/prompt';
-import { API } from '@/services/model/baseModel';
 
-const BASE_URL = getBaseUrl();
+const BASE_URL = getBaseURL();
 
 const HEADER = {
     'Content-Type': ContentTypeEnum.JSON,
@@ -29,8 +28,11 @@ const alovaInstance = createAlova({
     }),
     timeout: 5000,
     beforeRequest: (method) => {
-        const authStore = useAuthStore();
-        method.config.headers = assign(method.config.headers, HEADER, authStore.getAuthorization);
+        method.config.headers = assign(HEADER, method.config.headers);
+        const accessToken = useAuthStore().getToken;
+        if (!method.config.headers.Authorization && accessToken) {
+            method.config.headers.Authorization = accessToken;
+        }
     },
     responsed: {
         /**
@@ -45,6 +47,7 @@ const alovaInstance = createAlova({
             // @ts-ignore
             const { statusCode, data: rawData } = response;
             const { code, message, data } = rawData as API;
+
             if (statusCode === 200) {
                 if (enableDownload) {
                     // 下载处理

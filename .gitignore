@@ -11,3 +11,4 @@
 pnpm-lock.yaml
 /.eslintrc-auto-import.json
 /typings/
+.history/

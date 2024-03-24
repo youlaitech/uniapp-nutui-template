@@ -66,12 +66,12 @@ export function isUseMock(): boolean {
 }
 
 /**
- * @description: Get environment VITE_BASE_URL value
+ * @description: Get environment VITE_APP_API_URL value
  * @returns:
  * @example:
  */
-export function getBaseUrl(): string {
-    return getEnvValue<string>('VITE_BASE_URL');
+export function getBaseURL(): string {
+    return getEnvValue<string>('VITE_APP_BASE_API');
 }
 
 /**

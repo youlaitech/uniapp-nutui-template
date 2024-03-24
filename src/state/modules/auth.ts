@@ -15,9 +15,6 @@ export const useAuthStore = defineStore({
     getters: {
         getToken: (state) => state.token,
         isLogin: (state): boolean => !!state.token,
-        getAuthorization: (state) => {
-            return state.token ? { authorization: `Bearer ${state.token}` } : {};
-        },
     },
     actions: {
         initToken() {
